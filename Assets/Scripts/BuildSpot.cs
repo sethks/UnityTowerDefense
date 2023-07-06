@@ -14,12 +14,8 @@ public class BuildSpot : MonoBehaviour
         tower = null;
     }
 
-    private void OnMouseDown()
+    public void OnBuildSpotClicked()
     {
-
-        Debug.Log("TowerBuild instance: " + TowerBuildMenu.instance);
-        Debug.Log("Tower prefabs count in OnMouseDown: " + TowerBuildMenu.instance.towerPrefabs.Count);
-
         // Check if there is already a tower built here.
         if(tower != null)
         {
@@ -27,6 +23,9 @@ public class BuildSpot : MonoBehaviour
             return;
         }
 
+        TowerBuildMenu.instance.HideMenu();
+
+        towerMenu = TowerBuildMenu.instance.towerMenu;
         towerMenu.SetActive(true);
         towerMenu.transform.position = Camera.main.WorldToScreenPoint(transform.position);
         TowerBuildMenu.instance.SetBuildSpot(this);
@@ -41,12 +40,21 @@ public class BuildSpot : MonoBehaviour
             return;
         }
 
-        // If there's no tower, we create a new one from the provided prefab.
-        tower = Instantiate(towerPrefab, transform.position, Quaternion.identity);
-        Player.instance.SpendGold(towerPrefab.cost);
+        if(Player.instance.gold >= towerPrefab.cost)
+        {
+            // If there's no tower, we create a new one from the provided prefab.
+            tower = Instantiate(towerPrefab, transform.position, Quaternion.identity);
+            Player.instance.SpendGold(towerPrefab.cost);
         
-        // Parents the tower to the spot for organization in the hierarchy.
-        tower.transform.parent = transform;
+            // Parents the tower to the spot for organization in the hierarchy.
+            tower.transform.parent = transform;
+            TowerBuildMenu.instance.HideMenu();
+        }
+        else
+        {
+            Debug.Log("NO GOLD MF");
+            TowerBuildMenu.instance.HideMenu();
+        }
     }
 
     public void RemoveTower()

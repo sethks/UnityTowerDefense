@@ -6,7 +6,7 @@ public class TowerBuildMenu : MonoBehaviour
 {
     public static TowerBuildMenu instance;
     public List<BaseTower> towerPrefabs = new List<BaseTower>();
-    public GameObject menuPanel;
+    public GameObject towerMenu;
 
     private BuildSpot currentBuildSpot;
 
@@ -16,7 +16,7 @@ public class TowerBuildMenu : MonoBehaviour
             instance = this;
         else
             Destroy(gameObject);
-        menuPanel.SetActive(false);
+        towerMenu.SetActive(false);
     }
 
     public void SetBuildSpot(BuildSpot buildSpot)
@@ -31,6 +31,10 @@ public class TowerBuildMenu : MonoBehaviour
             Debug.Log("added tower 1");
             currentBuildSpot.BuildTower(towerPrefabs[0]);
         }
+        else
+        {
+            Debug.Log("NOT ENOUGH GOLD!");
+        }
     }
 
     public void BuildTower2()
@@ -40,6 +44,10 @@ public class TowerBuildMenu : MonoBehaviour
             Debug.Log("added tower 2");
             currentBuildSpot.BuildTower(towerPrefabs[1]);
         }
+        else
+        {
+            Debug.Log("NOT ENOUGH GOLD!");
+        }
     }
 
     // public void BuildTower3()
@@ -48,11 +56,15 @@ public class TowerBuildMenu : MonoBehaviour
     //     {
     //         currentBuildSpot.BuildTower(towerPrefabs[2]);
     //     }
+    //     else
+    //     {
+    //          Debug.Log("NOT ENOUGH GOLD!");
+    //     }
     // }
     
     public void HideMenu()
     {
-        gameObject.SetActive(false);
+        towerMenu.SetActive(false);
     }
 
     public BaseTower CheapestTower()
