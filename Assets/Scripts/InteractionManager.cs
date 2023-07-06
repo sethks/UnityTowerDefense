@@ -1,41 +1,45 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class InteractionManager : MonoBehaviour
 {
     // Reference to the tower that the player will build.
     public BaseTower towerPrefab;
-    public LayerMask buildSpotMask;
+    public LayerMask buildSpotMask = ~((1 << 10));
 
     void Update()
     {
         if(Input.GetMouseButtonDown(0))
+    {
+        // Create a ray from the mouse cursor on screen in the direction of the camera.
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        // Perform the raycast for build spots.
+        if(Physics.Raycast(ray, out hit, Mathf.Infinity, buildSpotMask))
         {
-            // Create a ray from the mouse cursor on screen in the direction of the camera.
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            // Perform the actual Raycast
-            if(Physics.Raycast(ray, out hit, Mathf.Infinity, buildSpotMask))
+            // If we hit a build spot
+            BuildSpot buildSpot = hit.transform.GetComponent<BuildSpot>();
+            if(buildSpot != null)
             {
-                // If we hit a build spot
-                BuildSpot buildSpot = hit.transform.GetComponent<BuildSpot>();
-                if(buildSpot != null)
-                {
-                    // Build a tower if the player has enough gold (TO-DO change interaction for towers)
-                    if(Player.instance.gold >= towerPrefab.cost)
-                    {
-                        buildSpot.BuildTower(towerPrefab);
-                    }
-                    else
-                        Debug.Log("NOT ENOUGH GOLD!");
-                }
+                // Here we are only managing the click on the build spot, the tower building is handled by the build menu.
+                buildSpot.OnBuildSpotClicked();
             }
-            else
+        }
+        else
+        {
+            // Check if we clicked on UI elements
+            PointerEventData pointerData = new PointerEventData(EventSystem.current) { position = Input.mousePosition };
+            List<RaycastResult> results = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(pointerData, results);
+            if (results.Count == 0)
             {
                 TowerBuildMenu.instance.HideMenu();
             }
         }
+    }
 
         if(Input.GetMouseButtonDown(1))
         {
@@ -51,9 +55,9 @@ public class InteractionManager : MonoBehaviour
                 if(buildSpot != null && buildSpot.tower != null)
                 {
                     // Remove the tower and refund some of the gold.
-                    int refuntAmount = buildSpot.tower.cost / 2;
+                    int refundAmount = buildSpot.tower.cost / 2;
                     buildSpot.RemoveTower();
-                    Player.instance.AddGold(refuntAmount);  // Give back half the cost as refund.
+                    Player.instance.AddGold(refundAmount);  // Give back half the cost as refund.
                 }
             }
         }
