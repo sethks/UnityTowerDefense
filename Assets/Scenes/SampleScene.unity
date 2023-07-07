@@ -590,7 +590,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &143370605
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1955,6 +1955,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dca7df0ea2a240843b74ca0ca057d7bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isSetupStage: 1
+  isWaveActive: 0
+  waveTimer: 0
+  activeWaveCount: 0
   waves:
   - spawns:
     - minionPrefab: {fileID: 3061359851266205742, guid: 545b7c0489dbde741a7aba6975bc11f8, type: 3}
