@@ -6,6 +6,11 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    public bool isSetupStage = true;
+    public bool isWaveActive = false;
+    public float waveTimer = 0f;
+    public int activeWaveCount = 0;
+
     public List<Wave> waves;
     private int currentWaveIndex = 0;
     private bool isWaveSpawning = false;
@@ -21,13 +26,45 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(SpawnWave(waves[currentWaveIndex]));
+        //StartCoroutine(SpawnWave(waves[currentWaveIndex]));
     }
 
     private void Update()
     {
-        if(Minion.activeMinions == 0 && !isWaveSpawning)
+        if(Minion.activeMinions == 0 && !isWaveSpawning && isWaveActive)
             NextWave();
+
+            if(isWaveActive)
+                UpdateWaveTimer();
+    }
+
+    public void StartWave()
+    {
+        if(!isWaveActive)
+        {
+            isWaveActive = true;
+            activeWaveCount++;
+            StartCoroutine(SpawnWave(waves[currentWaveIndex]));
+
+            Player.instance.AddGold(GetEarlyStartReward());
+
+            waveTimer = waves[currentWaveIndex].intervalBetweenWaves;
+        }
+    }
+
+    private int GetEarlyStartReward()
+    {
+        // Reward the player based on the remaining wave timer, e.g., for every second remaining, give 5 gold
+        return (int) (waveTimer * 5);
+    }
+
+    private void UpdateWaveTimer()
+    {
+        waveTimer -= Time.deltaTime;
+        if(waveTimer <= 0)
+        {
+            NextWave();
+        }
     }
 
     private IEnumerator SpawnWave(Wave wave)
