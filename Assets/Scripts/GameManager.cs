@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class GameManager : MonoBehaviour
     public bool isWaveActive = false;
     public float waveTimer = 0f;
     public int activeWaveCount = 0;
+    public Button startWaveButton;
 
     public List<Wave> waves;
     private int currentWaveIndex = 0;
@@ -46,16 +48,14 @@ public class GameManager : MonoBehaviour
             activeWaveCount++;
             StartCoroutine(SpawnWave(waves[currentWaveIndex]));
 
-            Player.instance.AddGold(GetEarlyStartReward());
-
             waveTimer = waves[currentWaveIndex].intervalBetweenWaves;
+            startWaveButton.interactable = true;
         }
-    }
-
-    private int GetEarlyStartReward()
-    {
-        // Reward the player based on the remaining wave timer, e.g., for every second remaining, give 5 gold
-        return (int) (waveTimer * 5);
+        else
+        {
+            Player.instance.AddGold(GetEarlyStartReward());
+            NextWave();
+        }
     }
 
     private void UpdateWaveTimer()
@@ -65,6 +65,15 @@ public class GameManager : MonoBehaviour
         {
             NextWave();
         }
+    }
+
+    private int GetEarlyStartReward()
+    {
+        // Reward the player based on the remaining wave timer, e.g., for every second remaining, give 5 gold
+        int reward = (int) (waveTimer * 5);
+        reward = Mathf.RoundToInt(reward / 10) * 10;
+        Debug.Log("ESR: " + reward + " Gold");
+        return reward;
     }
 
     private IEnumerator SpawnWave(Wave wave)
@@ -93,10 +102,14 @@ public class GameManager : MonoBehaviour
 
         //check for extra waves
         if(currentWaveIndex < waves.Count)
+        {
+            startWaveButton.interactable = false;
             StartCoroutine(SpawnWave(waves[currentWaveIndex]));
+        }
         else
         {
             Debug.Log(" Done... Starting Wave");
+            isWaveActive = false;
         }
     }
 }
