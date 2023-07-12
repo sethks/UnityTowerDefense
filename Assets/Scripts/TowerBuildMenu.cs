@@ -50,17 +50,17 @@ public class TowerBuildMenu : MonoBehaviour
         }
     }
 
-    // public void BuildTower3()
-    // {
-    //     if (currentBuildSpot != null && Player.instance.gold >= towerPrefabs[2].cost)
-    //     {
-    //         currentBuildSpot.BuildTower(towerPrefabs[2]);
-    //     }
-    //     else
-    //     {
-    //          Debug.Log("NOT ENOUGH GOLD!");
-    //     }
-    // }
+    public void BuildTower3()
+    {
+        if (currentBuildSpot != null && Player.instance.gold >= towerPrefabs[2].cost)
+        {
+            currentBuildSpot.BuildTower(towerPrefabs[2]);
+        }
+        else
+        {
+             Debug.Log("NOT ENOUGH GOLD!");
+        }
+    }
     
     public void HideMenu()
     {

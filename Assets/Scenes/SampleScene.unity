@@ -543,6 +543,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tower: {fileID: 6720959908328878700, guid: bd4b4f8ed45a10d4caa967aaad865b53, type: 3}
   towerMenu: {fileID: 143370604}
+  offset1: {x: -3, y: 0, z: 0.5}
+  offset2: {x: -2, y: 0, z: -1}
 --- !u!1 &131917141
 GameObject:
   m_ObjectHideFlags: 0
@@ -1537,6 +1539,7 @@ MonoBehaviour:
   towerPrefabs:
   - {fileID: 6720959908328878700, guid: bd4b4f8ed45a10d4caa967aaad865b53, type: 3}
   - {fileID: 5024309143101051024, guid: 6d87cb5b3739c4841b9769a8b9585e81, type: 3}
+  - {fileID: 6288280238132343896, guid: 8b5da9054392b254fb6261d57ad0ec94, type: 3}
   towerMenu: {fileID: 143370604}
 --- !u!4 &707464717
 Transform:
@@ -1962,11 +1965,11 @@ MonoBehaviour:
   startWaveButton: {fileID: 1524790261}
   waves:
   - spawns:
-    - minionPrefab: {fileID: 3061359851266205742, guid: 545b7c0489dbde741a7aba6975bc11f8, type: 3}
+    - minionPrefab: {fileID: 9039657072866827703, guid: 7a91ae10ef529414aae9e1b92ffeb69e, type: 3}
       spawnPoint: {fileID: 1381882753}
       count: 1
       intervalBetweenSpawns: 1
-    - minionPrefab: {fileID: 9039657072866827703, guid: 7a91ae10ef529414aae9e1b92ffeb69e, type: 3}
+    - minionPrefab: {fileID: 3061359851266205742, guid: 545b7c0489dbde741a7aba6975bc11f8, type: 3}
       spawnPoint: {fileID: 1381882753}
       count: 1
       intervalBetweenSpawns: 1
@@ -2114,6 +2117,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tower: {fileID: 6720959908328878700, guid: bd4b4f8ed45a10d4caa967aaad865b53, type: 3}
   towerMenu: {fileID: 143370604}
+  offset1: {x: 3.25, y: 0, z: 0}
+  offset2: {x: 2.8, y: 0, z: -1.5}
 --- !u!1 &1101303970
 GameObject:
   m_ObjectHideFlags: 0
@@ -2503,6 +2508,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tower: {fileID: 6720959908328878700, guid: bd4b4f8ed45a10d4caa967aaad865b53, type: 3}
   towerMenu: {fileID: 143370604}
+  offset1: {x: -2.5, y: 0, z: -1}
+  offset2: {x: -2, y: 0, z: -3}
 --- !u!1 &1268977865
 GameObject:
   m_ObjectHideFlags: 0
@@ -2896,7 +2903,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01aff95e04c610641a6c832717a1cb8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gold: 100
+  gold: 600
   health: 10
 --- !u!4 &1470629115
 Transform:
@@ -3494,7 +3501,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 707464716}
         m_TargetAssemblyTypeName: TowerBuildMenu, Assembly-CSharp
-        m_MethodName: 
+        m_MethodName: BuildTower3
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3937,6 +3944,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tower: {fileID: 6720959908328878700, guid: bd4b4f8ed45a10d4caa967aaad865b53, type: 3}
   towerMenu: {fileID: 143370604}
+  offset1: {x: 0.5, y: 0, z: 2.5}
+  offset2: {x: -1, y: 0, z: 2.75}
 --- !u!1 &1825088971
 GameObject:
   m_ObjectHideFlags: 0

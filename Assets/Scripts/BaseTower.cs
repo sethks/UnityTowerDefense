@@ -18,6 +18,8 @@ public class BaseTower : MonoBehaviour
     
     private void Start()
     {
+        // GameObject rangeVisualizerInstance = Instantiate(rangeVisualizer, transform.position, Quaternion.identity, transform);
+        // rangeVisualizer.transform.localScale = new Vector3(range * 2, range * 2, range * 2);
         LayerMask.NameToLayer("Tower");
         lastShotTime = -fireRate; // Allows us to fire right away
     }
