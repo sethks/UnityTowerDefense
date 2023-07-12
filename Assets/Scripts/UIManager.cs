@@ -1,5 +1,7 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -11,6 +13,11 @@ public class UIManager : MonoBehaviour
     {
         healthText.text = "Health: " + Player.instance.health.ToString();
         goldText.text = "Gold: " + Player.instance.gold.ToString();
-        // waveCountdownText.text = "Next wave in: " + WaveManager.instance.timTo 
+        waveCountdownText.text = "Next wave in: " + Mathf.Round(GameManager.instance.waveTimer) + "s";
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        GameManager.instance.StartWave();
     }
 }

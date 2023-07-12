@@ -9,6 +9,9 @@ public class BuildSpot : MonoBehaviour
     public BaseTower tower;
     public GameObject towerMenu;
 
+    // offset for barrackstower
+    public Vector3 offset1 = new Vector3(1, 0, 0);
+    public Vector3 offset2 = new Vector3(-1, 0, 0);
     private void Awake()
     {
         tower = null;
@@ -44,6 +47,12 @@ public class BuildSpot : MonoBehaviour
         {
             // If there's no tower, we create a new one from the provided prefab.
             tower = Instantiate(towerPrefab, transform.position, Quaternion.identity);
+
+            if(tower is BarracksTower barracksTower)
+            {
+                barracksTower.offset1 = offset1;
+                barracksTower.offset2 = offset2;
+            }
             Player.instance.SpendGold(towerPrefab.cost);
         
             // Parents the tower to the spot for organization in the hierarchy.
@@ -64,7 +73,6 @@ public class BuildSpot : MonoBehaviour
             Debug.Log("There's no tower to remove!");
             return;
         }
-
         Destroy(tower.gameObject);
         tower = null;
     }
@@ -84,6 +92,7 @@ public class BuildSpot : MonoBehaviour
     public void BuildTower3()
     {
         Debug.Log("added tower 3");
+        BuildTower(TowerBuildMenu.instance.towerPrefabs[2]);
     }
 
     // TO-DO Upgrade tower options and effects
