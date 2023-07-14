@@ -38,8 +38,6 @@ public class Player : MonoBehaviour
     public void TakeDamage(int damage)
     {
         health -= damage;
-        //Debug.Log("Current health " + health);
-        // check for death
         if(health <= 0)
         {
             Debug.Log("GAME OVER");
