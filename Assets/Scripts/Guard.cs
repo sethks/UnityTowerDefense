@@ -16,101 +16,41 @@ public class Guard : MonoBehaviour
     public int speed;
     public int damage;
     public int defense;
-    public int range;
     public int attackRange;
+    public float attackCooldown;
+    public float attackCooldownCurrent;
     public float moveSpeed = 1.0f;
+    public Minion target;
 
     private Vector3 spawnPoint;
-
-    // Interaction with enemy minion
-    private Minion target;
 
     protected virtual void Awake()
     {
         spawnPoint = transform.position;
         state = GuardState.Idle;
+        EngagementManager.instance.RegisterGuard(this);
+        attackCooldownCurrent = attackCooldown;
     }
     
     private void Update()
     {
-        switch(state)
+        if(attackCooldownCurrent > 0)
         {
-            case GuardState.Idle:
-                FindTarget();
-                break;
-            case GuardState.Engaging:
-                EngagTarget();
-                break;
-            case GuardState.Returning:
-                ReturnToSpawn();
-                break;
+            attackCooldownCurrent -= Time.deltaTime;
         }
 
         if(health <= 0)
         {
-            if(target != null)
-            {
-                target.isEngaged = false;
-            }
+            EngagementManager.instance.UnregisterGuard(this);
             Destroy(gameObject);
         }
     }
 
-    private void FindTarget()
+    public void ReturnToSpawn()
     {
-        Collider[] inRange = Physics.OverlapSphere(transform.position, range);
-        Minion targetMinion = null;
-        int targetWaypoint = -1;
-
-        foreach(Collider c in inRange)
-        {
-            Minion m = c.gameObject.GetComponent<Minion>();
-            if(m != null && m.CurrentWaypointIndex > targetWaypoint)
-            {
-                if(targetMinion != null)
-                    targetMinion.isEngaged = false;
-                targetMinion = m;
-                targetMinion.isEngaged = true;
-                targetWaypoint = m.CurrentWaypointIndex;
-            }
-        }
-        target = targetMinion;
         if(target != null)
-        {
-            state = GuardState.Engaging;
-        }
-    }
-
-    private void EngagTarget()
-    {
-        if(target == null || target.health <= 0)
-        {
-            FindTarget();
-
-            if(target == null)
-                state = GuardState.Returning;
-        }
-        else
-        {
-            state = GuardState.Engaging;
-            float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
-            if(distanceToTarget > attackRange)
-            {
-                // Move towards minion
-                Vector3 direction = (target.transform.position - transform.position).normalized;
-                transform.position += direction * moveSpeed * Time.deltaTime;
-            }
-            else
-            {
-                // Attack minion
-                //Debug.Log("Attacking enemy");
-                Attack(target);
-            }
-        }
-    }
-
-    private void ReturnToSpawn()
-    {
+            target.isEngaged = false;
+            
         Vector3 direction = (spawnPoint - transform.position).normalized;
         transform.position += direction * moveSpeed * Time.deltaTime;
 
@@ -120,22 +60,27 @@ public class Guard : MonoBehaviour
         }
     }
 
-    public virtual void Attack(Minion enemy)
+    public void Attack(Minion enemy)
     {
-        enemy.isEngaged = true;
-        int damageDone = Mathf.Max(0, damage - enemy.defense);
-        if(damageDone < 1)
+        if(attackCooldownCurrent <= 0)
         {
-            enemy.health -= 1;
-        }
-        else
-        {
-            enemy.health -= damageDone;
-        }
-        if(enemy.health <= 0)
-        {
-            enemy.isEngaged = false;
-            target = null;
+            attackCooldownCurrent = attackCooldown;
+            enemy.isEngaged = true;
+            int damageDone = Mathf.Max(0, damage - enemy.defense);
+
+            if(damageDone < 1)
+            {
+                enemy.health -= 1;
+            }
+            else
+            {
+                enemy.health -= damageDone;
+            }
+
+            if(enemy.health <= 0)
+            {
+                target = null;
+            }
         }
     }
 }

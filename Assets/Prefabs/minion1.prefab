@@ -125,5 +125,4 @@ MonoBehaviour:
   damage: 2
   defense: 2
   goldReward: 20
-  isEngaged: 0
   attackRange: 1

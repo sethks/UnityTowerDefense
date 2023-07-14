@@ -121,10 +121,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 0
-  range: 0
+  range: 4
   fireRate: 0
-  cost: 60
+  cost: 10
   guardPrefab: {fileID: 7046680472391990792, guid: 28109c3511097d240b716935e177b27c, type: 3}
-  spawnPoint1: {fileID: 4033213395368742920, guid: 5bce5cfc086e75e448c2d70684099067, type: 3}
-  spawnPoint2: {fileID: 1090635120871341520, guid: 8d272ba590662254faea2896556c241b, type: 3}
   maxGuards: 2
+  offset1: {x: 1, y: 0, z: 0}
+  offset2: {x: -1, y: 0, z: 0}

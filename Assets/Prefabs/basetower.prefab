@@ -119,6 +119,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 3
-  range: 3
+  range: 4
   fireRate: 2
   cost: 20

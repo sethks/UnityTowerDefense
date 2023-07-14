@@ -13,6 +13,11 @@ public class BarracksTower : BaseTower
     public Vector3 offset1;
     public Vector3 offset2;
 
+    public BarracksTower()
+    {
+        range = 5;
+    }
+
     private void Start()
     {
         CreateSpawnPoint(offset1);

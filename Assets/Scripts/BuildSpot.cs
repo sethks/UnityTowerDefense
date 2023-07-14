@@ -9,6 +9,8 @@ public class BuildSpot : MonoBehaviour
     public BaseTower tower;
     public GameObject towerMenu;
 
+    public GameObject rangeIndicatorPrefab;
+
     // offset for barrackstower
     public Vector3 offset1 = new Vector3(1, 0, 0);
     public Vector3 offset2 = new Vector3(-1, 0, 0);
@@ -47,6 +49,10 @@ public class BuildSpot : MonoBehaviour
         {
             // If there's no tower, we create a new one from the provided prefab.
             tower = Instantiate(towerPrefab, transform.position, Quaternion.identity);
+
+            GameObject rangeIndicator = Instantiate(rangeIndicatorPrefab, tower.transform.position, Quaternion.identity);
+            rangeIndicator.transform.localScale = new Vector3(tower.range * 2, 1, tower.range * 2);
+            rangeIndicator.transform.parent = tower.transform;
 
             if(tower is BarracksTower barracksTower)
             {

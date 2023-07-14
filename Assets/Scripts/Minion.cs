@@ -13,12 +13,8 @@ public class Minion : MonoBehaviour
     public int damage;
     public int defense;
     public int goldReward;
-    public bool isEngaged = false;
     public int attackRange;
-    public float attackSpeed = 1f;
-
-    private float timeSinceLastAttack = 0f;
-    private Guard target;
+    public bool isEngaged = false;
 
     // Path attributes for minion
     protected Path path;
@@ -32,6 +28,7 @@ public class Minion : MonoBehaviour
     protected virtual void Awake()
     {
         path = PathManager.instance.path;
+        EngagementManager.instance.RegisterMinion(this);
     }
 
     protected virtual void Start()
@@ -41,88 +38,41 @@ public class Minion : MonoBehaviour
 
     private void Update()
     {
-        timeSinceLastAttack += Time.deltaTime;
-        if (timeSinceLastAttack >= attackSpeed)
+        if(health <= 0 && gameObject != null)
         {
-            Move();
-            timeSinceLastAttack = 0f;
+            Player.instance.AddGold(goldReward);
+            EngagementManager.instance.AddMinionToRemove(this);
+            EngagementManager.instance.RemoveMinionAsTarget(this);
+            StartCoroutine(DestroyMinion());
         }
     }
 
     public virtual void Move()
     {
-        if(!isEngaged)
+        if(isEngaged || Player.instance.health <= 0)
+            return;
+
+        Transform targetWaypoint = path.GetWaypoint(currentWaypointIndex);
+        Vector3 direction = (targetWaypoint.position - transform.position).normalized;
+        transform.position += direction * speed * Time.deltaTime;
+
+        if(Vector3.Distance(transform.position, targetWaypoint.position) < 0.1f)
         {
-            Transform targetWaypoint = path.GetWaypoint(currentWaypointIndex);
-            Vector3 direction = (targetWaypoint.position - transform.position).normalized;
-            transform.position += direction * speed * Time.deltaTime;
+            currentWaypointIndex++;
 
-            if(Vector3.Distance(transform.position, targetWaypoint.position) < 0.1f)
+            if(currentWaypointIndex >= path.GetPathLength())
             {
-                currentWaypointIndex++;
-
-                if(currentWaypointIndex >= path.GetPathLength())
-                {
-                    Player.instance.TakeDamage(damage);
-                    activeMinions--;
-                    Destroy(gameObject);
-                }
+                Player.instance.TakeDamage(damage);
+                activeMinions--;
+                EngagementManager.instance.AddMinionToRemove(this);
+                Destroy(gameObject);
             }
-
-            Collider[] inRange = Physics.OverlapSphere(transform.position, attackRange); // make sure to define attackRange
-            Guard targetGuard = null;
-            float closestGuardDistance = Mathf.Infinity;
-
-            foreach(Collider c in inRange)
-            {
-                Guard g = c.gameObject.GetComponent<Guard>();
-                if(g != null && Vector3.Distance(transform.position, g.transform.position) < closestGuardDistance)
-                {
-                    targetGuard = g;
-                    closestGuardDistance = Vector3.Distance(transform.position, g.transform.position);
-                }
-            }
-            target = targetGuard;
-            if (target != null)
-            {
-                isEngaged = true;
-            }
-        }
-        else
-        {
-            // Already engaged, just attack
-            Attack(target);
-        }
-
-        if(health <= 0)
-        {
-            Player.instance.AddGold(goldReward);
-            Destroy(gameObject);
         }
     }
 
-    public virtual void Attack(Guard guard)
+    private IEnumerator DestroyMinion()
     {
-        if(guard != null)
-        {
-            int damageDone = Mathf.Max(0, damage - guard.defense);
-            if(damageDone < 1)
-            {
-                guard.health -= 1;
-            }
-            else
-            {
-                guard.health -= damageDone;
-            }
-            if(guard.health <= 0)
-            {
-                isEngaged = false;
-                target = null;
-            }
-        }
-        else
-        {
-            isEngaged = false;
-        }
+        yield return new WaitForEndOfFrame();
+        Destroy(gameObject);
     }
 }
